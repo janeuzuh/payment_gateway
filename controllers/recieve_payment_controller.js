@@ -88,28 +88,30 @@ async function webhooks(req, res) {
 
 
 
-async function initiatePayout(amount, narration) {
-  console.log("calling the payout function...")
+async function initiatePayout(req, res ) {
+  const {account_bank, account_number, amount, narration} = req.body
+  console.log("calling the payout function...");
   try {
-    const response = await axios.post('https://api.flutterwave.com/v3/transfers', {
-      account_bank: process.env.LOGISTICS_BANK_CODE,
-      account_number: process.env.LOGISTICS_ACCOUNT_NUMBER,
-      amount: amount,
-      narration: narration || "Payout for delivery",
-      currency: "NGN",
-      reference: generateTxRef(), // Use the same generator for unique payout references
-      debit_currency: "NGN"
-    }, {
-      headers: {
-        Authorization: `Bearer ${process.env.FLUTTERWAVE_SECRET_KEY}`
+    const response = await axios.post(
+      "https://api.flutterwave.com/v3/transfers",
+      {
+        account_bank: account_bank,
+        account_number: account_number,
+        amount: amount,
+        narration: narration || "Payout for delivery",
+        currency: "NGN",
+        reference: generateTxRef(), // Use the same generator for unique payout references
+        debit_currency: "NGN",
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.FLUTTERWAVE_SECRET_KEY}`,
+        },
       }
-    });
-
-    console.log("Payout initiated:", response.data);
-    return response.data;
+    );
+    res.status(200).json({message: "transaction completed", response: response})
   } catch (error) {
-    console.error("Payout failed:", error.response ? error.response.data : error.message);
-    throw new Error("Failed to initiate payout");
+    res.status(500).json({message: "transaction not completed", response: error.message})
   }
 }
 
