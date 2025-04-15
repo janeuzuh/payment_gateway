@@ -65,23 +65,23 @@ async function webhooks(req, res) {
   const secretHash = process.env.FLUTTERWAVE_WEBHOOK_SECRET;
   const signature = req.headers['verif-hash'];
 
-  if (!signature || signature !== secretHash) {
-    return res.status(401).send('Unauthorized');
-  }
+  // if (!signature || signature !== secretHash) {
+  //   return res.status(401).send('Unauthorized');
+  // }
 
-  const event = req.body;
-  console.log('Webhook event received:', event);
-  console.log('Raw Webhook Event:', JSON.stringify(event, null, 2));
+  // const event = req.body;
+  // console.log('Webhook event received:', event);
+  // console.log('Raw Webhook Event:', JSON.stringify(event, null, 2));
 
-  if (event['event.type'] === 'CARD_TRANSACTION' && event.status === 'successful') {
-    console.log('Payment successful, triggering payout...');
+  // if (event['event.type'] === 'CARD_TRANSACTION' && event.status === 'successful') {
+  //   console.log('Payment successful, triggering payout...');
 
-    // 20% of the delivery amount goes to the logistics company
-    const payoutAmount = event.amount * 0.20;
-    await initiatePayout(payoutAmount, `Delivery for Transaction Ref: ${event.tx_ref}`);
-  } else {
-    console.log('Payment failed or incomplete:', event);
-  }
+  //   // 20% of the delivery amount goes to the logistics company
+  //   const payoutAmount = event.amount * 0.20;
+  //   await initiatePayout(payoutAmount, `Delivery for Transaction Ref: ${event.tx_ref}`);
+  // } else {
+  //   console.log('Payment failed or incomplete:', event);
+  // }
 
   res.status(200).send('Webhook received successfully');
 }
