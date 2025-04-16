@@ -88,8 +88,8 @@ async function webhooks(req, res) {
 
 
 
-async function initiatePayout(req, res ) {
-  const {account_bank, account_number, amount, narration} = req.body
+async function initiatePayout(req, res) {
+  const { account_bank, account_number, amount, narration } = req.body;
   console.log("calling the payout function...");
   try {
     const response = await axios.post(
@@ -100,7 +100,7 @@ async function initiatePayout(req, res ) {
         amount: amount,
         narration: narration || "Payout for delivery",
         currency: "NGN",
-        reference: generateTxRef(), // Use the same generator for unique payout references
+        reference: generateTxRef(),
         debit_currency: "NGN",
       },
       {
@@ -109,11 +109,20 @@ async function initiatePayout(req, res ) {
         },
       }
     );
-    res.status(200).json({message: "transaction completed", response: response})
+
+    res.status(200).json({
+      message: "transaction completed",
+      response: response.data, // ✅ This is the part you want to return
+    });
   } catch (error) {
-    res.status(500).json({message: "transaction not completed", response: error.message})
+    console.error("Payout error:", error?.response?.data || error.message);
+    res.status(500).json({
+      message: "transaction not completed",
+      response: error?.response?.data || error.message,
+    });
   }
 }
+
 
 
 
