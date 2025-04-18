@@ -2,7 +2,7 @@ const axios = require('axios');
 require('dotenv').config();
 
 const generateTxRef = () => {
-    const prefix = 'your-app-prefix'; // Replace with your desired prefix
+    const prefix = 'chopnowng'; // Replace with your desired prefix
     const timestamp = Date.now(); // Current timestamp in milliseconds
     const randomString = Math.random().toString(36).substring(2, 8); // Generate a random string
   
